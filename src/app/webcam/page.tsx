@@ -3,12 +3,14 @@
 import { Box, Button, TextField } from "@mui/material";
 import React, { useState, useEffect, useRef } from "react";
 import socket from "@/app/socketStore";
+import { iceCred } from "@/services/ICE";
 
 const webcam = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [username, setUsername] = useState<string>("");
   const [created, setCreated] = useState<boolean>(false);
   const videoRef = useRef<any>(null);
+  let rtcPeerConnection;
 
   const constraints: MediaStreamConstraints = {
     audio: false,
@@ -67,7 +69,9 @@ const webcam = () => {
     alert("room is full can't join");
   });
 
-  socket.on("ready", () => {});
+  socket.on("ready", () => {
+    rtcPeerConnection = new RTCPeerConnection(iceCred);
+  });
   socket.on("candidate", () => {});
   socket.on("offer", () => {});
   socket.on("answer", () => {});
